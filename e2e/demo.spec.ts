@@ -39,7 +39,7 @@ test("Démo : le cas passant", async ({ page }) => {
     await page.getByRole("button", { name: "Ajouter" }).click();
 
     await page.getByLabel("Filtrer par poste").selectOption("Chargée de lien social");
-    await expect(page.locator("li").filter({ hasText: "Chargée de lien social" })).toBeVisible();
+    await expect(page.locator("tbody tr").filter({ hasText: "Chargée de lien social" })).toBeVisible();
     await expect(page.getByText("double financement")).toHaveCount(0);
   });
 });

@@ -1,0 +1,114 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 720px;
+  gap: 20px;
+  background-color: var(--foreground);
+  padding: 32px 40px;
+  border-radius: 12px;
+}
+
+.card h1 {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: 100%;
+}
+
+.form input {
+  flex: 1 1 140px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--background);
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+.form input::placeholder {
+  color: var(--text-secondary);
+}
+
+.form button {
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--text-primary);
+  color: var(--foreground);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.form button:hover {
+  opacity: 0.85;
+}
+
+.filtres {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+}
+
+.filtres label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.filtres select {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--background);
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.table th {
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.doublon td {
+  background: #fdecea;
+  color: #7a1f14;
+}
+
+.doublonLabel {
+  font-weight: 600;
+}
+
+@media (prefers-color-scheme: dark) {
+  .doublon td {
+    background: #3a1210;
+    color: #ff8a80;
+  }
+}

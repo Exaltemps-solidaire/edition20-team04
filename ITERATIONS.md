@@ -133,10 +133,26 @@
 - **Codage estimé** : 8 minutes
 - **Fichiers prévus** : `frontend/src/app/page.module.css` (ou nouveau `Financements.module.css`), `Financements.tsx` (classes), `page.tsx` (classes si ajustement de cohérence).
 - **Tests unitaires prévus** : aucun — pur style/balisage, pas de logique métier (cohérent avec les conventions de test du projet).
-- **Étapes ajoutées à la démo** : aucune nouvelle étape fonctionnelle ; la démo existante continue de passer sur le nouveau balisage.
-- **Bilan** : _à remplir en fin d'itération (durée de codage réelle, dépassement éventuel, fait, reporté, modifications fichier par fichier)_
+- **Étapes ajoutées à la démo** : aucune nouvelle étape fonctionnelle ; la démo existante a dû être corrigée (voir Écart non prévu) pour continuer de passer sur le nouveau balisage.
+- **Bilan** :
+  - **Temps restant annoncé avant l'itération 4** : 15 à 30 minutes (question posée le 2026-11-18). Suffisant pour cette itération (habillage, ~8 min de codage visés) suivie d'un tour de test, sans ouvrir de nouveau périmètre après.
+  - **Déclencheur** : le développeur a signalé que le visuel de l'accueil était « loupé » (capture d'écran à l'appui) — bug visible dès l'écran Financements, qui correspondait exactement au périmètre déjà planifié de cette itération.
+  - **Durée de codage réelle** : 2 minutes (budget 8-10 min, aucun dépassement, alarme non déclenchée).
+  - **Cause du bug signalé** : `Financements.tsx` réutilisait les classes `.page`/`.main` de `page.module.css`, qui fixent `min-height: 100vh`. Imbriqué dans le conteneur `.page` déjà plein écran de `page.tsx`, cela empilait un second écran plein vide sous la carte persona (le grand vide noir de la capture).
+  - **Critères d'acceptation** : les 3 satisfaits — vérifiés par capture d'écran (Playwright, local et en mode sombre) : écran Financements en tableau HTML (plus de liste à puces), lignes en double financement surlignées en rouge/rose (clair et sombre), apparence (carte, typographie, couleurs) cohérente entre l'écran persona et l'écran Financements.
+  - **Reporté** : rien de cette itération.
+  - **Bloqué ou refusé par le harnais** : rien — `verifier-deployabilite.sh` ne signale aucune borne, `npm test` passe (8 tests, inchangé : pas de nouvelle logique métier), `signaler-version.sh 4` accepté.
+  - **Écart non prévu** : le changement de balisage (liste → tableau) cassait le sélecteur `page.locator("li")` de `e2e/demo.spec.ts` — corrigé en `page.locator("tbody tr")`, démo revérifiée verte en local.
+  - **Modifications** :
+    - `frontend/src/app/page.module.css` (modifié) — `.page` passe de `justify-content: center` à `padding`/`gap`, pour empiler plusieurs cartes sans vide plein écran ; sert le 3ᵉ critère.
+    - `frontend/src/app/Financements.module.css` (nouveau) — style de carte, formulaire, filtres et tableau propres à l'écran Financements (au lieu de réutiliser `page.module.css`) ; sert les 1ᵉʳ, 2ᵉ et 3ᵉ critères.
+    - `frontend/src/app/Financements.tsx` (modifié) — remplace la liste à puces par un `<table>`, retire l'imbrication `.page`/`.main` qui causait le bug signalé ; sert les 1ᵉʳ et 2ᵉ critères.
+    - `e2e/demo.spec.ts` (corrigé) — sélecteur de ligne adapté au tableau (`tbody tr` au lieu de `li`).
+    - `ITERATIONS.md` (complété) — temps restant à l'itération 4, Bilan.
 
 ---
+
+⚠️ **Replanification après l'itération 4** : temps restant annoncé 15 à 30 minutes au début de cette itération, déjà entamé par le codage (2 min), la publication et le tour de test PM Lab à venir. Avec un coût minimum d'environ 25 minutes par itération complète (codage + publication + tour de test), **il ne reste probablement pas de marge pour une itération 5 complète** : propose de consacrer le temps restant à vérifier `$URL_PUBLIQUE/health` et `/sante` et à stabiliser ce qui est déjà en ligne pour le pitch, plutôt qu'ouvrir un nouveau périmètre (« Profils salariés » ci-dessous). À confirmer en demandant à nouveau le temps restant avant toute nouvelle itération.
 
 ## À venir (non détaillé, ordre de priorité de l'équipe — reprend après les itérations 3 et 4)
 
