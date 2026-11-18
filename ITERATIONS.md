@@ -6,6 +6,7 @@
 - **Temps restant annoncé** : 60 minutes (question posée le 2026-11-18).
 - **Durée du tour de test PM Lab** : 10 minutes (valeur par défaut, le développeur ne la connaissait pas précisément).
 - **Temps restant au début de l'itération 1** : ~55 minutes (question posée le 2026-11-18).
+- **Temps restant au début de l'itération 2** : ~30 minutes (question posée le 2026-11-18). ⚠️ Moins que prévu par le calcul initial (le plan supposait ~45-50 min disponibles à ce stade). Avec 10 min de codage + ~5 min de publication + 10 min de tour de test = ~25 min nécessaires, il reste ~5 min de marge seulement : **cette itération doit être traitée comme la dernière avant le pitch**, sans ouvrir de nouveau périmètre ensuite.
 - **Capacité estimée** : chaque itération coûte au plus 10 min de codage + ~5 min de publication + 10 min de tour de test = ~25 min. Avec 60 minutes, **2 itérations complètes tiennent confortablement** (50 min), avec ~10 min de marge en fin de build — insuffisant pour une 3ᵉ itération complète (elle recoupe le même calcul : 25 min minimum). Cette marge sert donc à stabiliser, pas à ouvrir un nouveau périmètre.
 - **Hors périmètre pour ce build** (✂️) : Météo des postes, Simulateur de falaise et Export du justificatif ne rentreront probablement pas avant le pitch, sauf si le build est prolongé ou le tour de test plus court que prévu. Ils restent dans « À venir », dans l'ordre de priorité fixé par l'équipe (`6-plan-de-livraison.md`).
 
@@ -64,9 +65,22 @@
 - **Fichiers prévus** : page/écran Financements côté `frontend/` (formulaire + liste), fonction de détection de doublon (logique métier isolée, testable), route API `api/.../financements` (stockage en mémoire), types partagés le cas échéant.
 - **Tests unitaires prévus** : 2 à 3 tests Vitest sur la fonction de détection de doublon (détecte un doublon même poste/même mois ; ne signale rien sur des mois différents ; ne signale rien sur des postes différents).
 - **Étapes ajoutées à la démo** (`e2e/demo.spec.ts`) : saisie de deux lignes de financement sur le même poste et même mois, vérification du signal de doublon affiché.
-- **Bilan** : _à remplir en fin d'itération (durée de codage réelle, dépassement éventuel, fait, reporté, modifications fichier par fichier)_
+- **Bilan** :
+  - **Durée de codage réelle** : 1 minute (budget 10 min, aucun dépassement, alarme non déclenchée).
+  - **Critères d'acceptation** : les 3 satisfaits — vérifiés en relisant `Financements.tsx` et `financements.ts`, en relançant `npm test` (5 tests, dont les 3 nouveaux sur `detecterDoublons`), et en rejouant la démo Playwright contre le déploiement local (`localhost:8080`) : saisie de deux lignes même poste/même mois → 2 mentions « double financement » visibles.
+  - **Reporté** : persistance côté API (stockage en mémoire sur `api/.../financements` prévu au plan initial) — remplacé par un état client (`useState`) pour tenir dans un budget de codage très réduit (1 min visée, 30 min de build restantes annoncées en début d'itération) ; à reprendre si une itération de stabilisation le permet, sans quoi reste tel quel pour le pitch. Pas de validation de format du mois ni du montant (champ `number`/texte libre) — hors des 3 critères d'acceptation, non traité.
+  - **Bloqué ou refusé par le harnais** : rien — `verifier-deployabilite.sh` ne signale aucune borne, `npm test` passe, `signaler-version.sh 2` accepté.
+  - **Modifications** :
+    - `frontend/src/app/financements.ts` (nouveau) — fonction pure `detecterDoublons` (même poste + même mois) ; sert les 2ᵉ et 3ᵉ critères.
+    - `frontend/src/app/financements.test.ts` (nouveau) — 3 tests Vitest sur `detecterDoublons` (doublon détecté, mois différents, postes différents).
+    - `frontend/src/app/Financements.tsx` (nouveau) — écran Financements : formulaire de saisie + liste avec signal de doublon ; sert les 1ᵉʳ, 2ᵉ et 3ᵉ critères.
+    - `frontend/src/app/page.tsx` (modifié) — affiche `Financements` sous le persona « gestion administrative et financière » une fois sélectionné.
+    - `e2e/demo.spec.ts` (complété) — étape « Je saisis deux lignes de financement sur le même poste et le même mois » (démonstration, hors DoD).
+    - `ITERATIONS.md` (complété) — temps restant à l'itération 2, Bilan.
 
 ---
+
+⚠️ **Fin de build annoncée proche** (~30 min restantes au début de l'itération 2, dont ~10 min consommées par le codage/publication/signal de cette itération). Conformément au calcul de capacité, **aucune itération 3 complète ne tient** dans le temps qui reste après le tour de test de l'équipe : le temps restant doit servir à stabiliser ce qui est déjà démontré (itérations 1 et 2), pas à ouvrir « Profils salariés » ou un autre point de la liste ci-dessous. À confirmer par les cadreurs si le temps restant annoncé diffère à la prochaine vérification.
 
 ## À venir (non détaillé, ordre de priorité de l'équipe)
 

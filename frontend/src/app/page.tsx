@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Financements } from "./Financements";
 import { personas } from "./personas";
 import styles from "./page.module.css";
 
@@ -23,6 +24,7 @@ export default function Home() {
             Changer de persona
           </button>
         </main>
+        {persona.id === "gestion-administrative-financiere" && <Financements />}
       </div>
     );
   }
