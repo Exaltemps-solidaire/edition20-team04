@@ -30,4 +30,16 @@ test("Démo : le cas passant", async ({ page }) => {
 
     await expect(page.getByText("double financement")).toHaveCount(2);
   });
+
+  await test.step("Je filtre la liste par poste", async () => {
+    await page.getByPlaceholder("Poste").fill("Chargée de lien social");
+    await page.getByPlaceholder("Financeur").fill("Petits Frères des Pauvres");
+    await page.getByPlaceholder("Mois (AAAA-MM)").fill("2026-04");
+    await page.getByPlaceholder("Montant").fill("800");
+    await page.getByRole("button", { name: "Ajouter" }).click();
+
+    await page.getByLabel("Filtrer par poste").selectOption("Chargée de lien social");
+    await expect(page.locator("li").filter({ hasText: "Chargée de lien social" })).toBeVisible();
+    await expect(page.getByText("double financement")).toHaveCount(0);
+  });
 });

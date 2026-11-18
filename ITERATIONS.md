@@ -1,6 +1,6 @@
 # Plan d'itérations — La Cloche (équipe VSSC36)
 
-**Plan validé le 2026-11-18**, tel quel (itérations 1 et 2).
+**Plan validé le 2026-11-18**, tel quel (itérations 1 et 2). **Itérations 3 et 4 validées le 2026-11-18**, tel quel également (demande nouvelle du développeur, ✂️ taillée en deux itérations ci-dessous).
 
 - **Source du plan** : proposé par l'agent (aucun plan d'itérations trouvé dans la passation — `cadrage/` ne contient pas de fichier `iteration*`, `passation.json` ne porte pas de clé `iterations`).
 - **Temps restant annoncé** : 60 minutes (question posée le 2026-11-18).
@@ -11,6 +11,10 @@
 - **Hors périmètre pour ce build** (✂️) : Météo des postes, Simulateur de falaise et Export du justificatif ne rentreront probablement pas avant le pitch, sauf si le build est prolongé ou le tour de test plus court que prévu. Ils restent dans « À venir », dans l'ordre de priorité fixé par l'équipe (`6-plan-de-livraison.md`).
 
 ⚠️ Le temps restant peut changer : il sera redemandé au début de chaque `/iteration`, et ce plan sera ajusté en conséquence.
+
+- **Temps restant annoncé avant l'itération 3** : 60 minutes (question posée le 2026-11-18, en réponse à une demande nouvelle du développeur). ⚠️ Remonte par rapport à l'estimation donnée en fin d'itération 2 (~20 min restantes à ce moment-là) : le build a visiblement été prolongé, ou l'estimation précédente était pessimiste. Je prends la valeur annoncée telle quelle, sans supposer la raison de l'écart.
+- **Capacité recalculée** : avec 60 minutes et le même coût par itération (~25 min), **2 itérations complètes tiennent** (50 min), ~10 min de marge — comme au début du build. La mise en garde « aucune itération 3 ne tient » de la fin d'itération 2 est donc levée par ce nouveau temps annoncé.
+- **Demande nouvelle du développeur** (hors plan initial, ✂️ taillée en deux itérations) : « styliser le rendu, le rendre plus user-friendly, et rajouter des listes déroulantes et des filtres au besoin » → listes déroulantes et filtres fonctionnels en Itération 3, habillage visuel en Itération 4. ⚠️ **Changement de priorité** par rapport à l'ordre « À venir » fixé par les cadreurs (qui plaçait « Profils salariés » en tête) : ces deux itérations passent devant, à la demande explicite du développeur sur cette session — à confirmer par les cadreurs au prochain tour de test.
 
 ---
 
@@ -80,9 +84,61 @@
 
 ---
 
-⚠️ **Fin de build annoncée proche** (~30 min restantes au début de l'itération 2, dont ~10 min consommées par le codage/publication/signal de cette itération). Conformément au calcul de capacité, **aucune itération 3 complète ne tient** dans le temps qui reste après le tour de test de l'équipe : le temps restant doit servir à stabiliser ce qui est déjà démontré (itérations 1 et 2), pas à ouvrir « Profils salariés » ou un autre point de la liste ci-dessous. À confirmer par les cadreurs si le temps restant annoncé diffère à la prochaine vérification.
+⚠️ Note historique : à la fin de l'itération 2, ~20 min restantes avaient été annoncées et laissaient supposer qu'aucune itération 3 ne tiendrait. Le développeur a ensuite annoncé 60 minutes restantes avant l'itération 3 (ci-dessus) : le calcul de capacité est donc revu en conséquence.
 
-## À venir (non détaillé, ordre de priorité de l'équipe)
+---
+
+## Itération 3 : Saisie assistée (listes déroulantes) et filtres sur la liste Financements
+
+- **Dans le périmètre** :
+  - Champs **Poste** et **Financeur** du formulaire Financements proposés en liste déroulante de suggestions (valeurs déjà saisies dans la session), tout en acceptant une valeur nouvelle (pas de catalogue fixe fourni par la passation).
+  - Filtres sur la liste des lignes : poste, financeur, mois (sélecteurs, valeur par défaut « Tous »).
+  - La fonction de filtrage est une fonction pure testable, combinée au signal de doublon déjà en place.
+- **Hors périmètre** : habillage visuel (reporté en Itération 4), filtre sur le montant, tri des colonnes, persistance des filtres après rechargement.
+- **Critères d'acceptation** :
+  - Étant donné des lignes déjà saisies, quand on ouvre la liste déroulante du champ Poste ou Financeur, alors les valeurs déjà utilisées apparaissent en suggestion, et une valeur nouvelle reste saisissable.
+  - Étant donné plusieurs lignes avec des postes différents, quand on choisit un poste dans le filtre, alors seules les lignes de ce poste s'affichent.
+  - Étant donné un filtre actif sur poste et financeur en même temps, quand les deux critères ne correspondent à aucune ligne, alors la liste affichée est vide (aucune ligne hors critères ne reste visible).
+- **Hypothèse de l'équipe couverte** : aucune directement — confort de saisie et de lecture, pas une des 4 hypothèses mesurées de la passation.
+- **Codage estimé** : 10 minutes
+- **Fichiers prévus** : `frontend/src/app/financements.ts` (fonction de filtrage + extraction des valeurs distinctes), `frontend/src/app/financements.test.ts` (tests du filtre), `frontend/src/app/Financements.tsx` (datalist + sélecteurs de filtre).
+- **Tests unitaires prévus** : 2 à 3 tests Vitest sur la fonction de filtrage (un critère seul, plusieurs critères combinés, aucun résultat).
+- **Étapes ajoutées à la démo** (`e2e/demo.spec.ts`) : filtrer la liste par poste après la saisie des deux lignes de doublon, vérifier que seules les lignes attendues restent visibles.
+- **Bilan** :
+  - **Durée de codage réelle** : moins d'1 minute (budget 10 min, aucun dépassement, alarme non déclenchée).
+  - **Critères d'acceptation** : les 3 satisfaits — vérifiés en relisant `Financements.tsx` (datalist sur Poste/Financeur, sélecteurs de filtre avec option « Tous »), en relançant `npm test` (8 tests, dont les 3 nouveaux sur `correspondAuxFiltres`), et en rejouant la démo Playwright contre le déploiement local (`localhost:8080`) : ajout d'une 3ᵉ ligne sur un poste différent, filtre sur ce poste → seule cette ligne reste visible, aucun « double financement » affiché.
+  - **Reporté** : filtre sur le montant, tri des colonnes, persistance des filtres après rechargement — non demandés dans les 3 critères d'acceptation, non traités.
+  - **Bloqué ou refusé par le harnais** : rien — `verifier-deployabilite.sh` ne signale aucune borne, `npm test` passe, `signaler-version.sh 3` accepté.
+  - **Écart non prévu** : la démo Playwright a d'abord échoué (`strict mode violation`, le texte du poste apparaissant à la fois dans l'option de filtre et dans la ligne de la liste) — corrigé en ciblant précisément l'élément de liste (`locator("li").filter(...)`), sans impact sur le budget de codage (démo hors DoD).
+  - **Modifications** :
+    - `frontend/src/app/financements.ts` (modifié) — ajoute `correspondAuxFiltres` et `valeursDistinctes` ; sert les 3 critères.
+    - `frontend/src/app/financements.test.ts` (modifié) — 3 tests Vitest sur `correspondAuxFiltres` (aucun filtre, un seul critère, critères combinés).
+    - `frontend/src/app/Financements.tsx` (modifié) — `datalist` sur les champs Poste/Financeur, sélecteurs de filtre poste/financeur/mois, rendu filtré de la liste.
+    - `e2e/demo.spec.ts` (complété) — étape « Je filtre la liste par poste » (démonstration, hors DoD).
+    - `ITERATIONS.md` (complété) — temps restant à l'itération 3, Bilan.
+
+---
+
+## Itération 4 : Habillage visuel des écrans Qui êtes-vous ? et Financements
+
+- **Dans le périmètre** :
+  - Mise en forme de l'écran Financements : tableau plutôt que liste brute, espacements, mise en évidence visuelle (couleur) des lignes en double financement, style cohérent des filtres et du formulaire.
+  - Petits ajustements de l'écran persona existant si besoin de cohérence visuelle (mêmes couleurs/typographie), sans changer son comportement.
+- **Hors périmètre** : toute nouvelle fonctionnalité ; dépendance de composants UI externe (reste en CSS natif / modules CSS déjà utilisés par le projet).
+- **Critères d'acceptation** :
+  - Étant donné l'écran Financements, quand il s'affiche, alors les lignes sont présentées en tableau lisible (pas une liste à puces brute).
+  - Étant donné une ligne en double financement, quand la liste s'affiche, alors elle se distingue visuellement (couleur/fond), en plus du texte déjà présent.
+  - Étant donné les deux écrans, quand on passe de l'un à l'autre, alors l'apparence (typographie, couleurs, espacements) est cohérente.
+- **Hypothèse de l'équipe couverte** : aucune — confort visuel, pas une des hypothèses mesurées.
+- **Codage estimé** : 8 minutes
+- **Fichiers prévus** : `frontend/src/app/page.module.css` (ou nouveau `Financements.module.css`), `Financements.tsx` (classes), `page.tsx` (classes si ajustement de cohérence).
+- **Tests unitaires prévus** : aucun — pur style/balisage, pas de logique métier (cohérent avec les conventions de test du projet).
+- **Étapes ajoutées à la démo** : aucune nouvelle étape fonctionnelle ; la démo existante continue de passer sur le nouveau balisage.
+- **Bilan** : _à remplir en fin d'itération (durée de codage réelle, dépassement éventuel, fait, reporté, modifications fichier par fichier)_
+
+---
+
+## À venir (non détaillé, ordre de priorité de l'équipe — reprend après les itérations 3 et 4)
 
 1. Profils salariés (sheet 2) : saisie du salaire, répartition du financement par poste, suivi des heures — prérequis au calcul du taux de couverture.
 2. Météo des postes : calcul automatique du taux de couverture et de la date de falaise, tableau postes × mois en couleurs.

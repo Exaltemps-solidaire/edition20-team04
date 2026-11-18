@@ -22,3 +22,23 @@ export function detecterDoublons(lignes: LigneFinancement[]): Set<number> {
   }
   return doublons;
 }
+
+export type FiltresFinancement = {
+  poste?: string;
+  financeur?: string;
+  mois?: string;
+};
+
+export function correspondAuxFiltres(ligne: LigneFinancement, filtres: FiltresFinancement): boolean {
+  if (filtres.poste && ligne.poste !== filtres.poste) return false;
+  if (filtres.financeur && ligne.financeur !== filtres.financeur) return false;
+  if (filtres.mois && ligne.mois !== filtres.mois) return false;
+  return true;
+}
+
+export function valeursDistinctes(
+  lignes: LigneFinancement[],
+  champ: "poste" | "financeur" | "mois",
+): string[] {
+  return Array.from(new Set(lignes.map((ligne) => ligne[champ]))).sort();
+}
