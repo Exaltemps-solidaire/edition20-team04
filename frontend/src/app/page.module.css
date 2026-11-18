@@ -1,0 +1,102 @@
+.page {
+  --background: #fafafa;
+  --foreground: #fff;
+  --text-primary: #000;
+  --text-secondary: #666;
+  --border: #ebebeb;
+  --hover: #f2f2f2;
+
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  font-family: var(--font-geist-sans);
+  background-color: var(--background);
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 480px;
+  gap: 16px;
+  background-color: var(--foreground);
+  padding: 60px 40px;
+  border-radius: 12px;
+}
+
+.main h1 {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.liste {
+  list-style: none;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.persona {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--foreground);
+  cursor: pointer;
+  text-align: left;
+}
+
+.persona:hover {
+  background: var(--hover);
+}
+
+.nom {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.role {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.eyebrow {
+  color: var(--text-secondary);
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.changer {
+  margin-top: 8px;
+  padding: 10px 16px;
+  border-radius: 128px;
+  border: 1px solid var(--border);
+  background: var(--foreground);
+  cursor: pointer;
+}
+
+.changer:hover {
+  background: var(--hover);
+}
+
+@media (prefers-color-scheme: dark) {
+  .page {
+    --background: #000;
+    --foreground: #0a0a0a;
+    --text-primary: #ededed;
+    --text-secondary: #999;
+    --border: #1a1a1a;
+    --hover: #1a1a1a;
+  }
+}
