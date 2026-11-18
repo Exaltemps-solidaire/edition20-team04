@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Financements } from "./Financements";
 import { personas } from "./personas";
+import { TableauDeBord } from "./TableauDeBord";
 import styles from "./page.module.css";
 
 export default function Home() {
@@ -25,6 +26,7 @@ export default function Home() {
           </button>
         </main>
         {persona.id === "gestion-administrative-financiere" && <Financements />}
+        {persona.id === "directrice-developpement-partenariats" && <TableauDeBord />}
       </div>
     );
   }

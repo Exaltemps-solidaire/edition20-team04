@@ -183,10 +183,45 @@
     - `e2e/demo.spec.ts` (corrigé) — assertion de doublon ciblée sur les lignes du scénario, pour ne plus dépendre du nombre total de doublons affichés.
     - `ITERATIONS.md` (complété) — section Itération 5, Bilan.
 
-## À venir (non détaillé, ordre de priorité de l'équipe — reprend après les itérations 3 et 4)
+---
 
-1. Profils salariés (sheet 2) : saisie du salaire, répartition du financement par poste, suivi des heures — prérequis au calcul du taux de couverture.
-2. Météo des postes : calcul automatique du taux de couverture et de la date de falaise, tableau postes × mois en couleurs.
-3. Alerte falaise (6 mois / 3 mois) pour la directrice du développement et des partenariats.
-4. Simulateur de falaise : recalcul immédiat à partir de date de départ, durée de vacance, coût du remplaçant (cible : 3 champs).
-5. Export du justificatif par financeur en un clic.
+## Itération 6 : Taux de couverture par poste (version minimale)
+
+- **Source** : demande nouvelle du développeur, qui a montré l'ensemble du prototype de passation (tableau de bord, fiche poste, imputations mensuelles, justificatif) en disant que l'écran Financements seul « ne répond pas aux exigences ». ✂️ Tout ce périmètre ne tient pas dans le temps restant : taillé en un seul morceau maintenant (ce que le développeur a choisi explicitement), le reste documenté ci-dessous pour après le build.
+- **Temps restant annoncé** : moins de 15 minutes (question posée le 2026-11-18). Traitée comme la dernière itération avant le pitch : un seul petit écran, pas de tour de test complet après.
+- **Dans le périmètre** :
+  - Un coût annuel de référence par poste (constante, reprenant les montants visibles dans le prototype pour les 4 postes déjà utilisés par les données fictives de l'itération 5).
+  - Un tableau de bord simple (persona « directrice du développement et des partenariats », jusqu'ici sans écran fonctionnel) : pour chaque poste, un taux de couverture = somme des montants déjà financés (toutes lignes fictives confondues) / coût annuel, avec un code couleur (vert ≥100 %, orange 70-99 %, rouge <70 %).
+  - Fonction de calcul pure et testée.
+- **Hors périmètre, reporté explicitement** (❗️ simplifications assumées faute de temps) :
+  - **Profils salariés** (ETP, heures réalisées) : non saisis, donc le taux affiché est une approximation (somme brute des montants / coût annuel), pas le calcul mensuel du prototype.
+  - **Date de falaise**, **alertes 6 mois/3 mois**, **simulateur de départ** : nécessitent la notion de période/échéance de convention, absente du modèle actuel.
+  - **Imputations mensuelles en tableau mois × financeur avec % de dépassement** (capture « Double financement détecté · mai 2025 ») : le signal de doublon actuel reste binaire (itération 2), pas transformé en vue mensuelle.
+  - **Génération de justificatif par financeur** : sans fiche poste détaillée ni imputations mensuelles en amont, cet écran n'aurait rien de réel à exporter.
+  - Le tableau de bord lit les données fictives fixes de l'itération 5, pas l'état saisi en direct dans l'écran Financements (pas de partage d'état entre les deux écrans dans ce budget).
+- **Critères d'acceptation** :
+  - Étant donné le persona « directrice du développement et des partenariats » sélectionné, quand l'écran s'affiche, alors chaque poste montre son taux de couverture en %.
+  - Étant donné un taux ≥100 %, 70-99 % ou <70 %, alors le poste s'affiche respectivement en vert, orange ou rouge.
+  - Le calcul du taux de couverture est une fonction pure, couverte par 2 à 3 tests Vitest (seuils des 3 couleurs).
+- **Codage estimé** : 8 minutes.
+- **Fichiers prévus** : `frontend/src/app/couverture.ts` (nouveau), `frontend/src/app/couverture.test.ts` (nouveau), `frontend/src/app/TableauDeBord.tsx` (nouveau), `frontend/src/app/TableauDeBord.module.css` (nouveau), `frontend/src/app/page.tsx` (branchement).
+- **Bilan** :
+  - **Durée de codage réelle** : 1 minute (budget 8 min, aucun dépassement).
+  - **Critères d'acceptation** : les 3 satisfaits — vérifiés par capture d'écran (persona Claire Moreau → les 4 postes affichent un taux en %, avec rouge/orange selon les seuils ; aucun n'atteint 100 % avec les données fictives actuelles, donc le vert n'a pas pu être vérifié visuellement mais l'est par les tests unitaires) et par `npm test` (11 tests, dont 5 nouveaux sur `calculerTauxCouverture`/`niveauCouverture`, seuils des 3 couleurs couverts).
+  - **Reporté** : l'ensemble documenté ci-dessus en « Hors périmètre » (profils salariés, date de falaise, alertes, imputations mensuelles en %, simulateur, justificatif) — repris et détaillé dans « À venir ».
+  - **Bloqué ou refusé par le harnais** : rien — `verifier-deployabilite.sh` ne signale aucune borne, `npm test` passe, `signaler-version.sh 6` accepté.
+  - **Modifications** :
+    - `frontend/src/app/couverture.ts` (nouveau) — coûts annuels de référence par poste, `calculerTauxCouverture`, `niveauCouverture` ; sert les 3 critères.
+    - `frontend/src/app/couverture.test.ts` (nouveau) — 5 tests Vitest (calcul, poste inconnu, 3 seuils de couleur).
+    - `frontend/src/app/TableauDeBord.tsx` (nouveau) — écran de couverture par poste pour la persona « directrice du développement et des partenariats ».
+    - `frontend/src/app/TableauDeBord.module.css` (nouveau) — style cohérent avec les cartes existantes.
+    - `frontend/src/app/page.tsx` (modifié) — branche `TableauDeBord` sur la seconde persona, jusqu'ici sans écran fonctionnel.
+    - `ITERATIONS.md` (complété) — section Itération 6, Bilan, « À venir » détaillé.
+
+## À venir (non détaillé, ordre de priorité de l'équipe — reprend après les itérations 3, 4, 5 et 6)
+
+1. Profils salariés (sheet 2) : saisie du salaire, de l'ETP et du suivi d'heures par poste — pour remplacer l'approximation de couverture de l'itération 6 par le vrai calcul du prototype.
+2. Imputations mensuelles : vue mois × financeur par poste, avec détection du dépassement en % (et non plus un simple signal binaire).
+3. Date de falaise, calculée à partir des conventions de financement (échéances), et alertes 6 mois / 3 mois pour la directrice du développement et des partenariats.
+4. Simulateur de falaise : recalcul à partir de date de départ, durée de vacance, coût du remplaçant.
+5. Export du justificatif par financeur en un clic, une fois la fiche poste et les imputations mensuelles disponibles.

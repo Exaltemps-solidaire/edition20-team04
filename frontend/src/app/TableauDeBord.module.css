@@ -1,0 +1,78 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 720px;
+  gap: 16px;
+  background-color: var(--foreground);
+  padding: 32px 40px;
+  border-radius: 12px;
+}
+
+.card h1 {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.liste {
+  list-style: none;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.poste {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.nom {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.taux {
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 14px;
+}
+
+.ok {
+  background: #e6f4ea;
+  color: #1e4620;
+}
+
+.risque {
+  background: #fff4e0;
+  color: #7a4a00;
+}
+
+.alerte {
+  background: #fdecea;
+  color: #7a1f14;
+}
+
+@media (prefers-color-scheme: dark) {
+  .ok {
+    background: #16331a;
+    color: #8be39c;
+  }
+  .risque {
+    background: #3a2a0c;
+    color: #ffc266;
+  }
+  .alerte {
+    background: #3a1210;
+    color: #ff8a80;
+  }
+}
