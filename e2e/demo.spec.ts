@@ -28,7 +28,9 @@ test("Démo : le cas passant", async ({ page }) => {
     await page.getByPlaceholder("Montant").fill("500");
     await page.getByRole("button", { name: "Ajouter" }).click();
 
-    await expect(page.getByText("double financement")).toHaveCount(2);
+    await expect(
+      page.locator("tbody tr").filter({ hasText: "Coordinateur Carillon" }).filter({ hasText: "double financement" }),
+    ).toHaveCount(2);
   });
 
   await test.step("Je filtre la liste par poste", async () => {

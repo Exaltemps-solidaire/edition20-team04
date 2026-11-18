@@ -5,13 +5,14 @@ import {
   correspondAuxFiltres,
   detecterDoublons,
   FiltresFinancement,
+  lignesDemo,
   LigneFinancement,
   valeursDistinctes,
 } from "./financements";
 import styles from "./Financements.module.css";
 
 export function Financements() {
-  const [lignes, setLignes] = useState<LigneFinancement[]>([]);
+  const [lignes, setLignes] = useState<LigneFinancement[]>(lignesDemo);
   const [filtres, setFiltres] = useState<FiltresFinancement>({});
   const doublons = detecterDoublons(lignes);
 

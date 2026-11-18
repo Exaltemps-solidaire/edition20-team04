@@ -154,6 +154,35 @@
 
 ⚠️ **Replanification après l'itération 4** : temps restant annoncé 15 à 30 minutes au début de cette itération, déjà entamé par le codage (2 min), la publication et le tour de test PM Lab à venir. Avec un coût minimum d'environ 25 minutes par itération complète (codage + publication + tour de test), **il ne reste probablement pas de marge pour une itération 5 complète** : propose de consacrer le temps restant à vérifier `$URL_PUBLIQUE/health` et `/sante` et à stabiliser ce qui est déjà en ligne pour le pitch, plutôt qu'ouvrir un nouveau périmètre (« Profils salariés » ci-dessous). À confirmer en demandant à nouveau le temps restant avant toute nouvelle itération.
 
+---
+
+## Itération 5 : Données fictives de démonstration sur l'écran Financements
+
+- **Source** : demande nouvelle du développeur, taillée en itération (pas codée directement), validée par ses réponses aux questions de cadrage : il veut ces données comme état de départ dans le code (visibles de tous, y compris au tour de test PM Lab et au pitch), pas une vérification locale éphémère.
+- **Temps restant annoncé** : 10 à 20 minutes (question posée le 2026-11-18). ⚠️ Trop court pour une itération complète avec tour de test PM Lab après (coût minimum ~25 min) : traitée comme la **dernière itération avant le pitch**, consacrée à la stabilisation de la démo plutôt qu'à un nouveau tour de test complet.
+- **Dans le périmètre** :
+  - Une dizaine de lignes fictives pré-chargées dans l'état initial de l'écran Financements (poste, financeur, mois, montant), couvrant plusieurs postes/financeurs/mois différents.
+  - Au moins une paire de lignes en double financement (même poste, même mois), pour démontrer le surlignage sans action de l'utilisateur.
+- **Hors périmètre** : persistance en base, bouton de réinitialisation, désactivation de la saisie manuelle (qui reste possible en plus des lignes fictives).
+- **Critères d'acceptation** :
+  - Étant donné l'écran Financements, quand il s'affiche sans aucune saisie, alors au moins 8 lignes fictives apparaissent déjà dans le tableau.
+  - Étant donné ces lignes fictives, quand la page s'affiche, alors au moins une paire se distingue visuellement comme double financement.
+  - Étant donné ces lignes fictives, quand on saisit une nouvelle ligne ou qu'on filtre, alors le formulaire et les filtres fonctionnent toujours normalement.
+- **Codage estimé** : 5 minutes.
+- **Fichiers prévus** : `frontend/src/app/financements.ts` (constante de données fictives), `frontend/src/app/Financements.tsx` (état initial).
+- **Tests unitaires prévus** : aucun — données statiques, pas de nouvelle logique métier (cohérent avec l'itération 4).
+- **Bilan** :
+  - **Durée de codage réelle** : 2 minutes (budget 5 min, aucun dépassement).
+  - **Critères d'acceptation** : les 3 satisfaits — vérifiés par capture d'écran (10 lignes fictives visibles dès l'ouverture de l'écran, reprenant postes et financeurs du prototype de passation `passation/prototype/index.html` ; une paire en double financement surlignée sans aucune saisie), et par la démo Playwright rejouée contre le déploiement (`localhost:8080`) qui ajoute encore des lignes et filtre, donc confirme que saisie et filtres restent fonctionnels avec les données fictives déjà présentes.
+  - **Reporté** : rien.
+  - **Bloqué ou refusé par le harnais** : rien — `verifier-deployabilite.sh` ne signale aucune borne, `npm test` passe (8 tests, inchangé : données statiques, pas de nouvelle logique), `signaler-version.sh 5` accepté.
+  - **Écart non prévu** : la démo `e2e/demo.spec.ts` comptait exactement 2 occurrences de « double financement » après l'ajout de ses propres lignes de test ; avec le doublon désormais déjà présent dans les données fictives, ce compte global n'était plus exact — corrigé en ciblant spécifiquement les lignes « Coordinateur Carillon » ajoutées par le scénario.
+  - **Modifications** :
+    - `frontend/src/app/financements.ts` (modifié) — ajoute la constante `lignesDemo` (10 lignes fictives, dont une paire en doublon) ; sert les 1ᵉʳ et 2ᵉ critères.
+    - `frontend/src/app/Financements.tsx` (modifié) — état initial de la liste réglé sur `lignesDemo` au lieu d'un tableau vide ; sert les 1ᵉʳ et 2ᵉ critères.
+    - `e2e/demo.spec.ts` (corrigé) — assertion de doublon ciblée sur les lignes du scénario, pour ne plus dépendre du nombre total de doublons affichés.
+    - `ITERATIONS.md` (complété) — section Itération 5, Bilan.
+
 ## À venir (non détaillé, ordre de priorité de l'équipe — reprend après les itérations 3 et 4)
 
 1. Profils salariés (sheet 2) : saisie du salaire, répartition du financement par poste, suivi des heures — prérequis au calcul du taux de couverture.
